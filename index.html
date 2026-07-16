@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05070a" />
+  <meta name="description" content="Reditum Ecosystem: Sniper Ultra, New POC and Sniper Cluster Vela. Less noise. More structure to read the market." />
+  <title>REDITUM — Read the market's footprints</title>
+  <style>
+    :root {
+      --bg: #05070a;
+      --bg-soft: #080c12;
+      --panel: rgba(14, 20, 29, .72);
+      --panel-strong: #0d131c;
+      --line: rgba(255,255,255,.09);
+      --text: #f5f8fb;
+      --muted: #99a5b5;
+      --cyan: #2de7f2;
+      --cyan-rgb: 45,231,242;
+      --blue: #5a7cff;
+      --green: #41f28b;
+      --amber: #ffc85a;
+      --violet: #a886ff;
+      --danger: #ff6474;
+      --radius: 28px;
+      --shadow: 0 30px 90px rgba(0,0,0,.45);
+      --max: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(900px 480px at 82% -8%, rgba(45,231,242,.13), transparent 65%),
+        radial-gradient(720px 500px at -8% 20%, rgba(90,124,255,.10), transparent 68%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .24;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+      z-index: -1;
+    }
+
+    ::selection { background: rgba(var(--cyan-rgb), .28); color: white; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .container { width: min(calc(100% - 40px), var(--max)); margin-inline: auto; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      color: #d7f9fb;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 30px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan));
+      box-shadow: 0 0 12px var(--cyan);
+    }
+
+    .section { padding: 120px 0; position: relative; }
+    .section-title {
+      margin: 0;
+      max-width: 850px;
+      font-size: clamp(2.5rem, 5vw, 5.7rem);
+      line-height: .93;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+    }
+    .section-title .accent { color: var(--cyan); text-shadow: 0 0 26px rgba(var(--cyan-rgb), .22); }
+    .section-copy {
+      max-width: 680px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 1.6vw, 1.26rem);
+      line-height: 1.7;
+    }
+
+    .nav {
+      position: fixed;
+      inset: 18px 0 auto;
+      z-index: 50;
+    }
+    .nav-shell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 12px 14px 12px 20px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 999px;
+      background: rgba(6,9,13,.72);
+      backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: 0 16px 50px rgba(0,0,0,.28);
+      transition: border-color .25s ease, transform .25s ease;
+    }
+    .nav-shell:hover { border-color: rgba(var(--cyan-rgb), .24); }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: max-content;
+    }
+    .brand-mark {
+      position: relative;
+      width: 34px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(var(--cyan-rgb), .55);
+      border-radius: 50%;
+      box-shadow: inset 0 0 20px rgba(var(--cyan-rgb), .12), 0 0 20px rgba(var(--cyan-rgb), .12);
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: "";
+      position: absolute;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+    .brand-mark::before { width: 14px; height: 1px; left: 9px; top: 16px; }
+    .brand-mark::after { width: 1px; height: 14px; left: 16px; top: 9px; }
+    .brand-mark span {
+      position: absolute;
+      width: 6px;
+      aspect-ratio: 1;
+      border: 1px solid var(--cyan);
+      border-radius: 50%;
+      left: 13px;
+      top: 13px;
+    }
+    .brand-text strong { display: block; font-size: .92rem; letter-spacing: .17em; }
+    .brand-text small { display: block; margin-top: 2px; color: #6f7b8d; font-size: .58rem; letter-spacing: .22em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 26px; color: #aab5c2; font-size: .86rem; }
+    .nav-links a { transition: color .2s ease; }
+    .nav-links a:hover { color: white; }
+    .nav-cta, .btn-primary, .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .nav-cta, .btn-primary {
+      color: #001114;
+      background: linear-gradient(135deg, #9dfaff, var(--cyan));
+      box-shadow: 0 12px 32px rgba(var(--cyan-rgb), .22), inset 0 -2px 0 rgba(0,0,0,.14);
+    }
+    .nav-cta:hover, .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 18px 46px rgba(var(--cyan-rgb), .31); }
+    .btn-secondary {
+      border-color: rgba(255,255,255,.14);
+      color: white;
+      background: rgba(255,255,255,.035);
+    }
+    .btn-secondary:hover { transform: translateY(-2px); border-color: rgba(var(--cyan-rgb), .42); }
+    .menu-btn { display: none; width: 42px; height: 42px; border: 0; border-radius: 50%; background: rgba(255,255,255,.06); cursor: pointer; }
+
+    .btn-lang {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border: 1px solid var(--cyan);
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+      color: var(--cyan);
+      background: rgba(var(--cyan-rgb), .1);
+      transition: all .25s ease;
+      font-size: 0.85rem;
+      letter-spacing: .05em;
+    }
+    .btn-lang:hover { background: var(--cyan); color: #001114; box-shadow: 0 0 24px rgba(var(--cyan-rgb), .5); transform: translateY(-2px); }
+    
+    .nav-actions { display: flex; gap: 14px; align-items: center; }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: grid;
+      align-items: center;
+      padding: 132px 0 70px;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 180px;
+      background: linear-gradient(transparent, var(--bg));
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: clamp(34px, 6vw, 92px);
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      margin-bottom: 28px;
+      color: #c9f9fc;
+      border: 1px solid rgba(var(--cyan-rgb), .22);
+      border-radius: 999px;
+      background: rgba(var(--cyan-rgb), .055);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(65,242,139,.6);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(65,242,139,0); } 100% { box-shadow: 0 0 0 0 rgba(65,242,139,0); } }
+    h1 {
+      margin: 0;
+      font-size: clamp(3.7rem, 8vw, 8.5rem);
+      line-height: .82;
+      letter-spacing: -.075em;
+      text-transform: uppercase;
+    }
+    h1 .line { display: block; }
+    h1 .ghost {
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,.3);
+      text-shadow: 0 0 42px rgba(255,255,255,.04);
+    }
+    h1 .cyan {
+      color: var(--cyan);
+      text-shadow: 0 0 35px rgba(var(--cyan-rgb), .28);
+    }
+    .hero-copy {
+      max-width: 640px;
+      margin: 30px 0 0;
+      color: #aeb8c6;
+      font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+      line-height: 1.65;
+    }
+    .hero-copy strong { color: white; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .hero-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 28px;
+      margin-top: 34px;
+      color: #7e8a9b;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .hero-proof span { display: flex; align-items: center; gap: 9px; }
+    .hero-proof i { width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+
+    .cockpit {
+      position: relative;
+      min-height: 590px;
+      perspective: 1200px;
+    }
+    .cockpit-glow {
+      position: absolute;
+      width: 480px;
+      aspect-ratio: 1;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(var(--cyan-rgb), .18), transparent 62%);
+      filter: blur(10px);
+    }
+    .terminal {
+      position: absolute;
+      inset: 42px 0 50px 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(17,24,34,.94), rgba(5,8,13,.88));
+      box-shadow: var(--shadow), inset 0 0 80px rgba(var(--cyan-rgb), .028);
+      transform: rotateY(-8deg) rotateX(2deg);
+      transform-origin: center;
+    }
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      color: #7e8998;
+      font-size: .68rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .dots { display: flex; gap: 7px; }
+    .dots span { width: 7px; height: 7px; border-radius: 50%; background: #303a47; }
+    .dots span:first-child { background: var(--danger); }
+    .dots span:nth-child(2) { background: var(--amber); }
+    .dots span:nth-child(3) { background: var(--green); }
+    #marketCanvas { display: block; width: 100%; height: 480px; }
+    .terminal-hud {
+      position: absolute;
+      inset: 74px 18px auto auto;
+      width: 156px;
+      padding: 13px;
+      border: 1px solid rgba(var(--cyan-rgb), .20);
+      border-radius: 15px;
+      background: rgba(4,9,14,.72);
+      backdrop-filter: blur(12px);
+    }
+    .hud-label { color: #6e7b8e; font-size: .61rem; letter-spacing: .14em; text-transform: uppercase; }
+    .hud-value { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 7px; }
+    .hud-value strong { font-size: 1.6rem; }
+    .hud-value span { color: var(--green); font-size: .68rem; font-weight: 800; }
+    .hud-mini { display: grid; gap: 8px; margin-top: 12px; }
+    .hud-mini div { display: flex; justify-content: space-between; color: #7d8998; font-size: .66rem; }
+    .hud-mini b { color: #c8d0da; }
+    .reticle {
+      position: absolute;
+      width: 180px;
+      aspect-ratio: 1;
+      right: -28px;
+      bottom: 14px;
+      border: 1px solid rgba(var(--cyan-rgb), .21);
+      border-radius: 50%;
+      animation: slowspin 18s linear infinite;
+    }
+    .reticle::before, .reticle::after {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px dashed rgba(var(--cyan-rgb), .26);
+      border-radius: 50%;
+    }
+    .reticle::after { inset: 70px; background: rgba(var(--cyan-rgb), .14); border-style: solid; box-shadow: 0 0 30px rgba(var(--cyan-rgb), .18); }
+    @keyframes slowspin { to { transform: rotate(360deg); } }
+    .float-card {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      background: rgba(9,14,21,.86);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 38px rgba(0,0,0,.28);
+      color: #cdd5de;
+      font-size: .72rem;
+      font-weight: 750;
+      letter-spacing: .05em;
+      animation: float 5s ease-in-out infinite;
+    }
+    .float-card::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+    .float-1 { top: 5px; right: 38px; }
+    .float-2 { left: -8px; bottom: 24px; animation-delay: -1.8s; }
+    .float-3 { right: -8px; top: 48%; animation-delay: -3s; }
+    @keyframes float { 50% { transform: translateY(-8px); } }
+
+    .marquee-wrap {
+      position: relative;
+      z-index: 3;
+      overflow: hidden;
+      border-block: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      transform: rotate(-1.5deg) scale(1.02);
+    }
+    .marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 26s linear infinite;
+      padding: 17px 0;
+      color: #657180;
+      font-size: .75rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+    .marquee span { padding: 0 28px; }
+    .marquee b { color: var(--cyan); margin-right: 28px; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: end;
+    }
+    .questions { display: grid; gap: 12px; }
+    .question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,.035), rgba(255,255,255,.012));
+      color: #c8d0da;
+      transform: translateX(0);
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .question:hover { transform: translateX(8px); border-color: rgba(var(--cyan-rgb), .25); background: rgba(var(--cyan-rgb), .04); }
+    .question span { color: #566273; font-variant-numeric: tabular-nums; font-size: .72rem; }
+    .answer-chip {
+      margin-top: 18px;
+      padding: 22px;
+      border-left: 2px solid var(--cyan);
+      background: linear-gradient(90deg, rgba(var(--cyan-rgb), .08), transparent);
+      color: #d8e0e8;
+      line-height: 1.65;
+    }
+
+    .scanner-section { overflow: hidden; }
+    .scanner-shell {
+      margin-top: 54px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 32px;
+      background: linear-gradient(145deg, rgba(16,23,33,.86), rgba(6,9,14,.93));
+      box-shadow: var(--shadow);
+    }
+    .scanner-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 7px 8px 18px;
+    }
+    .scanner-title strong { display: block; font-size: 1rem; }
+    .scanner-title span { display: block; margin-top: 5px; color: #697687; font-size: .72rem; }
+    .scanner-status { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border: 1px solid rgba(65,242,139,.2); border-radius: 999px; color: #bfffd7; background: rgba(65,242,139,.06); font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .scanner-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      min-height: 560px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+    }
+    .scanner-visual {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        #070b10;
+      background-size: 48px 48px;
+    }
+    .scan-price {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.38), transparent);
+    }
+    .scan-zone {
+      position: absolute;
+      left: 7%;
+      right: 8%;
+      top: 40%;
+      height: 110px;
+      border-block: 1px solid rgba(var(--cyan-rgb), .42);
+      background: linear-gradient(180deg, rgba(var(--cyan-rgb), .02), rgba(var(--cyan-rgb), .12), rgba(var(--cyan-rgb), .02));
+      box-shadow: 0 0 60px rgba(var(--cyan-rgb), .08) inset;
+      transition: top .45s ease, height .45s ease, opacity .35s ease;
+    }
+    .scan-zone::before { content: "CLUSTER ZONE"; position: absolute; left: 16px; top: 12px; color: rgba(154,248,255,.78); font-size: .6rem; font-weight: 900; letter-spacing: .14em; }
+    .poc-line {
+      position: absolute;
+      left: 7%;
+      right: 8%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--line-color), var(--line-color), transparent);
+      box-shadow: 0 0 10px var(--line-color);
+      transition: top .48s cubic-bezier(.2,.8,.2,1), opacity .25s ease;
+    }
+    .poc-line b {
+      position: absolute;
+      right: 0;
+      top: -10px;
+      padding: 3px 7px;
+      border: 1px solid color-mix(in srgb, var(--line-color) 45%, transparent);
+      border-radius: 6px;
+      background: #080c12;
+      color: var(--line-color);
+      font-size: .6rem;
+      letter-spacing: .05em;
+    }
+    .trend-path {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .scanner-side {
+      padding: 28px;
+      border-left: 1px solid var(--line);
+      background: rgba(255,255,255,.018);
+    }
+    .control { margin-bottom: 34px; }
+    .control-head { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+    .control-head label { font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; }
+    .control-head output { color: var(--cyan); font-weight: 900; font-variant-numeric: tabular-nums; }
+    .control p { margin: 9px 0 15px; color: #718092; font-size: .76rem; line-height: 1.55; }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    .timeframes { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .tf {
+      padding: 10px 4px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,.025);
+      color: #778496;
+      font-size: .68rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tf.active { color: #d9fcff; border-color: rgba(var(--cyan-rgb), .36); background: rgba(var(--cyan-rgb), .08); box-shadow: inset 0 0 20px rgba(var(--cyan-rgb), .04); }
+    .scanner-readout {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .readout {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #090e15;
+    }
+    .readout span { display: block; color: #687587; font-size: .59rem; letter-spacing: .1em; text-transform: uppercase; }
+    .readout strong { display: block; margin-top: 7px; font-size: 1.1rem; }
+
+    .products { display: grid; gap: 44px; margin-top: 62px; }
+    .product {
+      position: relative;
+      display: grid;
+      grid-template-columns: .87fr 1.13fr;
+      gap: 54px;
+      align-items: center;
+      min-height: 570px;
+      padding: clamp(28px, 5vw, 64px);
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 34px;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(15,21,31,.84), rgba(6,9,14,.92));
+      box-shadow: 0 35px 80px rgba(0,0,0,.28);
+    }
+    .product:nth-child(even) { grid-template-columns: 1.13fr .87fr; }
+    .product:nth-child(even) .product-copy { order: 2; }
+    .product::before {
+      content: "";
+      position: absolute;
+      width: 520px;
+      aspect-ratio: 1;
+      right: -220px;
+      top: -240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--product-rgb), .14), transparent 68%);
+    }
+    .product-number { color: rgba(255,255,255,.18); font-size: .78rem; font-weight: 900; letter-spacing: .16em; }
+    .product h3 { margin: 18px 0 0; font-size: clamp(2.4rem, 4.5vw, 5rem); line-height: .9; letter-spacing: -.055em; text-transform: uppercase; }
+    .product h3 span { color: var(--product-color); }
+    .product-lead { margin: 24px 0 0; color: #c1cad4; font-size: 1.1rem; line-height: 1.65; }
+    .feature-list { display: grid; gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
+    .feature-list li { display: flex; gap: 12px; color: #8f9bab; line-height: 1.55; }
+    .feature-list li::before { content: ""; flex: 0 0 8px; height: 8px; margin-top: .5em; border-radius: 50%; background: var(--product-color); box-shadow: 0 0 12px var(--product-color); }
+    .product-visual {
+      position: relative;
+      z-index: 2;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 25px;
+      background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+      box-shadow: 0 25px 60px rgba(0,0,0,.38);
+      transform: perspective(1000px) rotateY(-4deg) rotateX(2deg);
+    }
+    .product:nth-child(even) .product-visual { transform: perspective(1000px) rotateY(4deg) rotateX(2deg); }
+    .product-visual::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(var(--product-rgb), .48), transparent 35%, rgba(255,255,255,.08));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .screen {
+      overflow: hidden;
+      border-radius: 15px;
+      background: #030506;
+    }
+    .screen img { aspect-ratio: 16/9; object-fit: cover; }
+    .screen.tall img { aspect-ratio: 1.08/1; object-fit: cover; object-position: top; }
+    .screen-label {
+      position: absolute;
+      left: 32px;
+      bottom: 30px;
+      padding: 8px 11px;
+      border: 1px solid rgba(var(--product-rgb), .25);
+      border-radius: 9px;
+      color: #d8faff;
+      background: rgba(5,9,14,.78);
+      backdrop-filter: blur(10px);
+      font-size: .65rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .mini-stat {
+      position: absolute;
+      top: 34px;
+      right: -14px;
+      min-width: 130px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 13px;
+      background: rgba(6,10,15,.9);
+      box-shadow: 0 16px 34px rgba(0,0,0,.36);
+    }
+    .mini-stat span { color: #657284; font-size: .58rem; text-transform: uppercase; letter-spacing: .12em; }
+    .mini-stat strong { display: block; margin-top: 6px; color: var(--product-color); font-size: 1rem; }
+
+    .system-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 14px;
+      margin-top: 56px;
+      counter-reset: step;
+    }
+    .system-card {
+      position: relative;
+      min-height: 270px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+      counter-increment: step;
+      transition: transform .3s ease, border-color .3s ease;
+    }
+    .system-card:hover { transform: translateY(-8px); border-color: rgba(var(--cyan-rgb), .24); }
+    .system-card::before { content: "0" counter(step); color: rgba(var(--cyan-rgb), .45); font-size: .72rem; font-weight: 900; letter-spacing: .12em; }
+    .system-icon { width: 48px; height: 48px; margin: 38px 0 18px; display: grid; place-items: center; border: 1px solid rgba(var(--cyan-rgb), .2); border-radius: 14px; background: rgba(var(--cyan-rgb), .05); color: var(--cyan); }
+    .system-card h4 { margin: 0; font-size: 1.15rem; text-transform: uppercase; letter-spacing: -.02em; }
+    .system-card p { margin: 12px 0 0; color: #778496; font-size: .9rem; line-height: 1.6; }
+
+    .copilot {
+      padding-bottom: 50px;
+    }
+    .copilot-shell {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 42px;
+      align-items: center;
+      padding: clamp(34px, 6vw, 76px);
+      overflow: hidden;
+      border: 1px solid rgba(var(--cyan-rgb), .18);
+      border-radius: 38px;
+      background:
+        radial-gradient(600px 360px at 78% 35%, rgba(var(--cyan-rgb), .12), transparent 66%),
+        linear-gradient(145deg, #0d151d, #05080c);
+      box-shadow: var(--shadow);
+    }
+    .copilot-shell::before {
+      content: "";
+      position: absolute;
+      width: 550px;
+      height: 550px;
+      right: -230px;
+      top: -260px;
+      border: 1px solid rgba(var(--cyan-rgb), .11);
+      border-radius: 50%;
+      box-shadow: 0 0 0 80px rgba(var(--cyan-rgb), .025), 0 0 0 160px rgba(var(--cyan-rgb), .018);
+    }
+    .copilot h2 { margin: 0; font-size: clamp(2.8rem, 5vw, 6.2rem); line-height: .88; letter-spacing: -.06em; text-transform: uppercase; }
+    .copilot h2 span { color: var(--cyan); }
+    .copilot p { max-width: 620px; margin: 24px 0 0; color: #95a1af; font-size: 1.08rem; line-height: 1.7; }
+    .flow-list { display: grid; gap: 13px; }
+    .flow-item { display: grid; grid-template-columns: 50px 1fr; gap: 14px; align-items: center; padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: rgba(255,255,255,.025); }
+    .flow-num { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 13px; background: rgba(var(--cyan-rgb), .07); color: var(--cyan); font-weight: 900; }
+    .flow-item strong { display: block; }
+    .flow-item span { display: block; margin-top: 4px; color: #738092; font-size: .8rem; }
+
+    .cta-section { padding: 100px 0 70px; }
+    .cta-shell {
+      display: grid;
+      grid-template-columns: 1fr .78fr;
+      gap: 60px;
+      align-items: center;
+      padding: clamp(36px, 6vw, 76px);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 38px;
+      background: linear-gradient(150deg, rgba(15,23,32,.95), rgba(4,7,11,.95));
+      box-shadow: var(--shadow);
+    }
+    .cta-shell h2 { margin: 0; font-size: clamp(3rem, 5.5vw, 6.6rem); line-height: .86; letter-spacing: -.06em; text-transform: uppercase; }
+    .cta-shell h2 span { color: var(--cyan); }
+    .cta-shell p { margin: 24px 0 0; max-width: 620px; color: #909cab; line-height: 1.7; }
+    .lead-form {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 24px;
+      background: rgba(255,255,255,.025);
+    }
+    .field { position: relative; }
+    .field input {
+      width: 100%;
+      height: 56px;
+      padding: 0 16px;
+      color: white;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 13px;
+      outline: none;
+      background: #080d13;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .field input:focus { border-color: rgba(var(--cyan-rgb), .55); box-shadow: 0 0 0 4px rgba(var(--cyan-rgb), .06); }
+    .lead-form button { width: 100%; border: 0; min-height: 56px; }
+    .form-note { margin: 3px 0 0; color: #596677; font-size: .69rem; line-height: 1.5; text-align: center; }
+    .form-success { display: none; padding: 14px; border: 1px solid rgba(65,242,139,.25); border-radius: 12px; background: rgba(65,242,139,.06); color: #baffd2; text-align: center; font-size: .82rem; }
+
+    footer { padding: 34px 0 60px; color: #586474; font-size: .74rem; }
+    .footer-grid { display: flex; justify-content: space-between; gap: 30px; padding-top: 30px; border-top: 1px solid var(--line); }
+    .footer-grid strong { color: #8995a4; letter-spacing: .12em; }
+    .legal { max-width: 760px; line-height: 1.7; }
+
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+    .reveal.visible { opacity: 1; transform: none; }
+    #cursorHalo { position: fixed; z-index: 100; width: 26px; height: 26px; border: 1px solid rgba(var(--cyan-rgb), .5); border-radius: 50%; pointer-events: none; transform: translate(-50%,-50%); opacity: 0; transition: width .2s ease, height .2s ease, opacity .2s ease; mix-blend-mode: screen; }
+    body.cursor-active #cursorHalo { opacity: .8; }
+
+    @media (max-width: 1050px) {
+      .hero-grid, .problem-grid, .copilot-shell, .cta-shell { grid-template-columns: 1fr; }
+      .hero { padding-top: 150px; }
+      .cockpit { min-height: 530px; max-width: 760px; width: 100%; margin: 0 auto; }
+      .scanner-grid { grid-template-columns: 1fr; }
+      .scanner-side { border-left: 0; border-top: 1px solid var(--line); }
+      .product, .product:nth-child(even) { grid-template-columns: 1fr; }
+      .product:nth-child(even) .product-copy { order: 0; }
+      .product-visual, .product:nth-child(even) .product-visual { transform: none; }
+      .system-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 820px) {
+      .nav-links, .nav-cta { display: none; }
+      .menu-btn { display: grid; place-items: center; }
+      .nav-shell { padding-right: 10px; }
+      .nav-shell.open { border-radius: 26px; align-items: flex-start; flex-wrap: wrap; }
+      .nav-shell.open .nav-links { order: 4; width: 100%; display: grid; gap: 0; padding: 10px 2px 4px; }
+      .nav-shell.open .nav-links a { padding: 13px 0; border-top: 1px solid var(--line); }
+      .nav-shell.open .nav-cta { display: inline-flex; margin-left: auto; width: 100%; margin-top: 14px; }
+      .nav-actions { gap: 8px; margin-left: auto; margin-right: 10px; }
+      .section { padding: 88px 0; }
+      .cockpit { min-height: 440px; }
+      .terminal { inset: 24px 8px 36px; transform: none; }
+      #marketCanvas { height: 380px; }
+      .reticle { width: 130px; }
+      .float-3 { display: none; }
+      .system-grid { grid-template-columns: 1fr; }
+      .product { min-height: auto; }
+      .mini-stat { right: 22px; }
+    }
+    @media (max-width: 560px) {
+      .container { width: min(calc(100% - 24px), var(--max)); }
+      .nav { inset: 10px 0 auto; }
+      .nav-shell { padding-left: 14px; }
+      .brand-text small { display: none; }
+      .nav-shell.open .nav-cta { display: none; }
+      .hero { padding-top: 118px; }
+      h1 { font-size: clamp(3.25rem, 19vw, 5.2rem); }
+      .hero-actions { display: grid; }
+      .btn-primary, .btn-secondary { width: 100%; min-height: 54px; }
+      .cockpit { min-height: 360px; }
+      .terminal { inset: 18px 0 26px; border-radius: 20px; }
+      .terminal-bar { height: 42px; }
+      #marketCanvas { height: 300px; }
+      .terminal-hud { top: 54px; width: 132px; }
+      .reticle, .float-2 { display: none; }
+      .float-1 { right: 10px; }
+      .scanner-shell { padding: 10px; }
+      .scanner-top { align-items: flex-start; flex-direction: column; }
+      .scanner-visual { min-height: 420px; }
+      .scanner-side { padding: 22px; }
+      .product { padding: 24px; border-radius: 26px; }
+      .product h3 { font-size: 2.7rem; }
+      .product-visual { padding: 8px; }
+      .screen-label { left: 18px; bottom: 18px; }
+      .mini-stat { display: none; }
+      .copilot-shell, .cta-shell { border-radius: 28px; padding: 30px 22px; }
+      .footer-grid { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursorHalo" aria-hidden="true"></div>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <div class="container nav-shell" id="navShell">
+      <a class="brand" href="#inicio" aria-label="REDITUM, volver al inicio">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span class="brand-text"><strong>REDITUM</strong><small>technology by INGRESARIOS</small></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#problema">The Signal</a>
+        <a href="#scanner">Confluence</a>
+        <a href="#ecosistema">Ecosystem</a>
+        <a href="#proceso">Process</a>
+      </div>
+      <div class="nav-actions">
+        <a class="btn-lang" href="/es.html" title="Cambiar a Español">ES</a>
+        <a class="nav-cta" href="#contacto">View the tools <span aria-hidden="true">↗</span></a>
+      </div>
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <div class="hero-kicker"><span class="pulse-dot"></span> Reditum Ecosystem // structured reading</div>
+          <h1>
+            <span class="line">The market</span>
+            <span class="line ghost">doesn't always</span>
+            <span class="line cyan">warn you.</span>
+          </h1>
+          <p class="hero-copy">But it always leaves <strong>footprints</strong>: value zones, matching timeframes, and structures starting to sync. Reditum turns visual noise into a clearer decision map.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#scanner">Explore confluence <span aria-hidden="true">→</span></a>
+            <a class="btn-secondary" href="#ecosistema">Meet the ecosystem</a>
+          </div>
+          <div class="hero-proof">
+            <span><i></i> 6 timeframes</span>
+            <span><i></i> Configurable rules</span>
+            <span><i></i> Tech as a co-pilot</span>
+          </div>
+        </div>
+
+        <div class="cockpit" aria-label="Visualización animada de un gráfico de mercado">
+          <div class="cockpit-glow"></div>
+          <div class="terminal">
+            <div class="terminal-bar"><div class="dots"><span></span><span></span><span></span></div><span>REDITUM // MULTI-TIMEFRAME MAP</span><span>LIVE</span></div>
+            <canvas id="marketCanvas" width="800" height="520"></canvas>
+            <div class="terminal-hud">
+              <span class="hud-label">Confluence</span>
+              <div class="hud-value"><strong>91%</strong><span>VALIDATED</span></div>
+              <div class="hud-mini"><div>Cluster <b>4 POC</b></div><div>SmartTrend <b>BULLISH</b></div><div>Context <b>ACTIVE</b></div></div>
+            </div>
+          </div>
+          <div class="reticle" aria-hidden="true"></div>
+          <div class="float-card float-1">Weekly POC synced</div>
+          <div class="float-card float-2">Decision zone detected</div>
+          <div class="float-card float-3">SmartTrend: bullish context</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee">
+        <span><b>◆</b>Value</span><span><b>◆</b>Context</span><span><b>◆</b>Confluence</span><span><b>◆</b>Rules</span><span><b>◆</b>Discipline</span><span><b>◆</b>PEDEM</span>
+        <span><b>◆</b>Value</span><span><b>◆</b>Context</span><span><b>◆</b>Confluence</span><span><b>◆</b>Rules</span><span><b>◆</b>Discipline</span><span><b>◆</b>PEDEM</span>
+      </div>
+    </div>
+
+    <section class="section" id="problema">
+      <div class="container problem-grid">
+        <div class="reveal">
+          <span class="eyebrow">The problem isn't the data</span>
+          <h2 class="section-title">You don't need more <span class="accent">information.</span></h2>
+          <p class="section-copy">You need a better way to see the information you already have. When every indicator speaks a different language, the screen turns into a meeting where everyone shouts and no one takes notes.</p>
+          <div class="answer-chip">REDITUM organizes the reading with visual data, relevant zones, and configurable rules. It doesn't trade for you. It doesn't eliminate risk. It strengthens your process.</div>
+        </div>
+        <div class="questions reveal">
+          <div class="question"><strong>Is the trend continuing?</strong><span>01</span></div>
+          <div class="question"><strong>Am I entering too late?</strong><span>02</span></div>
+          <div class="question"><strong>Does this level really matter?</strong><span>03</span></div>
+          <div class="question"><strong>Where should I protect the trade?</strong><span>04</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section scanner-section" id="scanner">
+      <div class="container">
+        <div class="reveal">
+          <span class="eyebrow">Interactive Demo</span>
+          <h2 class="section-title">Where others see lines, you see <span class="accent">confluence.</span></h2>
+          <p class="section-copy">Adjust the confidence level. Define how many POCs must align. Watch the zone adapt. The algorithm doesn't guess here: it filters based on your rules.</p>
+        </div>
+
+        <div class="scanner-shell reveal">
+          <div class="scanner-top">
+            <div class="scanner-title"><strong>SNIPER ULTRA // CLUSTER SCANNER</strong><span>Visual simulation of multi-timeframe concentration</span></div>
+            <div class="scanner-status"><span class="pulse-dot"></span><span id="statusText">Cluster validated</span></div>
+          </div>
+          <div class="scanner-grid">
+            <div class="scanner-visual" id="scannerVisual">
+              <div class="scan-zone" id="scanZone"></div>
+              <div class="scan-price"></div>
+              <svg class="trend-path" viewBox="0 0 900 520" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="trendGradient" x1="0" x2="1"><stop offset="0" stop-color="#5a7cff"/><stop offset=".55" stop-color="#2de7f2"/><stop offset="1" stop-color="#41f28b"/></linearGradient></defs>
+                <path d="M0 395 C80 410 110 360 175 378 S280 320 345 350 S455 240 510 285 S610 230 665 252 S750 170 900 190" fill="none" stroke="url(#trendGradient)" stroke-width="3" opacity=".9"/>
+                <path d="M0 395 C80 410 110 360 175 378 S280 320 345 350 S455 240 510 285 S610 230 665 252 S750 170 900 190 L900 520 L0 520Z" fill="url(#trendGradient)" opacity=".04"/>
+              </svg>
+              <div class="poc-line" data-index="0" style="--line-color:#5a7cff"><b>30m</b></div>
+              <div class="poc-line" data-index="1" style="--line-color:#8a6dff"><b>60m</b></div>
+              <div class="poc-line" data-index="2" style="--line-color:#ff66cb"><b>120m</b></div>
+              <div class="poc-line" data-index="3" style="--line-color:#2de7f2"><b>240m</b></div>
+              <div class="poc-line" data-index="4" style="--line-color:#ffc85a"><b>D</b></div>
+              <div class="poc-line" data-index="5" style="--line-color:#41f28b"><b>W</b></div>
+            </div>
+            <aside class="scanner-side">
+              <div class="control">
+                <div class="control-head"><label for="confidence">Confidence</label><output id="confidenceOutput">86%</output></div>
+                <p>Higher = fewer zones and stricter statistical requirements.</p>
+                <input id="confidence" type="range" min="55" max="98" value="86" />
+              </div>
+              <div class="control">
+                <div class="control-head"><label for="clusterSize">Cluster size</label><output id="clusterOutput">4 POC</output></div>
+                <p>Set the minimum POCs that must match to validate a zone.</p>
+                <input id="clusterSize" type="range" min="2" max="6" value="4" />
+              </div>
+              <div class="control">
+                <div class="control-head"><label>Active Timeframes</label><output id="activeOutput">6/6</output></div>
+                <p>Enable or disable time perspectives.</p>
+                <div class="timeframes">
+                  <button class="tf active" data-index="0">30m</button><button class="tf active" data-index="1">60m</button><button class="tf active" data-index="2">120m</button>
+                  <button class="tf active" data-index="3">240m</button><button class="tf active" data-index="4">D</button><button class="tf active" data-index="5">W</button>
+                </div>
+              </div>
+              <div class="scanner-readout">
+                <div class="readout"><span>Direction</span><strong style="color:var(--green)">Bullish</strong></div>
+                <div class="readout"><span>Sync</span><strong id="syncValue">High</strong></div>
+                <div class="readout"><span>Zone</span><strong id="zoneValue">Active</strong></div>
+                <div class="readout"><span>Decision</span><strong>Wait</strong></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ecosistema">
+      <div class="container">
+        <div class="reveal">
+          <span class="eyebrow">Three tools. One goal.</span>
+          <h2 class="section-title">Stop chasing the price. <span class="accent">Read it.</span></h2>
+          <p class="section-copy">Each module solves a layer of the process: where value is concentrated, when it changes, and what structure is forming around it.</p>
+        </div>
+
+        <div class="products">
+          <article class="product reveal" style="--product-color:#2de7f2;--product-rgb:45,231,242">
+            <div class="product-copy">
+              <span class="product-number">MODULE 01 // MULTI-TIMEFRAME</span>
+              <h3>Sniper <span>Ultra</span></h3>
+              <p class="product-lead">Observe six timeframes on a single chart and detect where Points of Control start to concentrate.</p>
+              <ul class="feature-list">
+                <li>30, 60, 120, and 240-minute POCs, plus daily and weekly levels.</li>
+                <li>Cluster ceiling and floor visually identified in cyan.</li>
+                <li>SmartTrend integrates bullish or bearish context without adding another screen.</li>
+                <li>Confidence and Cluster Size adjust selectivity and frequency.</li>
+              </ul>
+            </div>
+            <div class="product-visual">
+              <div class="screen"><img src="assets/sniper-ultra.webp" alt="Reditum Sniper Ultra chart with multi-timeframe POCs" loading="lazy" /></div>
+              <span class="screen-label">6 timeframes // 1 reading</span>
+              <div class="mini-stat"><span>Cluster detected</span><strong>4 POC</strong></div>
+            </div>
+          </article>
+
+          <article class="product reveal" style="--product-color:#ffc85a;--product-rgb:255,200,90">
+            <div class="product-copy">
+              <span class="product-number">MODULE 02 // VALUE SHIFT</span>
+              <h3>New <span>POC</span></h3>
+              <p class="product-lead">Identify when a shift in Points of Control can become a valid scenario under additional conditions.</p>
+              <ul class="feature-list">
+                <li>Validates price position against an exponential moving average.</li>
+                <li>Filters by predominant direction and selected POCs.</li>
+                <li>Controls the duration of pending orders and active sessions.</li>
+                <li>Works with defined rules, not last-second reactions.</li>
+              </ul>
+            </div>
+            <div class="product-visual">
+              <div class="screen tall"><img src="assets/nuevo-poc.webp" alt="Reditum New POC strategy panel" loading="lazy" /></div>
+              <span class="screen-label">Shift detected // rules validated</span>
+              <div class="mini-stat"><span>Filter</span><strong>Context + POC</strong></div>
+            </div>
+          </article>
+
+          <article class="product reveal" style="--product-color:#a886ff;--product-rgb:168,134,255">
+            <div class="product-copy">
+              <span class="product-number">MODULE 03 // STRUCTURE</span>
+              <h3>Cluster <span>Vela</span></h3>
+              <p class="product-lead">Finds price structures in zones where confluence exists. Because not all highs and lows carry the same weight.</p>
+              <ul class="feature-list">
+                <li>HL + cluster: higher low accompanied by confluence.</li>
+                <li>LH + cluster: lower high accompanied by confluence.</li>
+                <li>Combines price structure and POC concentration.</li>
+                <li>You decide direction, conditions, and active schedules.</li>
+              </ul>
+            </div>
+            <div class="product-visual">
+              <div class="screen"><img src="assets/cluster-vela.webp" alt="Reditum Sniper Cluster Vela chart" loading="lazy" /></div>
+              <span class="screen-label">Structure + confluence</span>
+              <div class="mini-stat"><span>Pattern</span><strong>HL / LH Cluster</strong></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="proceso">
+      <div class="container">
+        <div class="reveal">
+          <span class="eyebrow">From data to discipline</span>
+          <h2 class="section-title">Technology that strengthens your <span class="accent">process.</span></h2>
+          <p class="section-copy">The edge isn't in cluttering the chart with signals. It's in building a workflow you can repeat, measure, and improve.</p>
+        </div>
+        <div class="system-grid">
+          <article class="system-card reveal"><div class="system-icon">⌖</div><h4>Detect</h4><p>Find where value concentrates and which timeframes begin to align.</p></article>
+          <article class="system-card reveal"><div class="system-icon">≋</div><h4>Filter</h4><p>Apply trend, conditions, sessions, and confidence levels before acting.</p></article>
+          <article class="system-card reveal"><div class="system-icon">↗</div><h4>Execute</h4><p>Trade your own strategy with clear rules and pre-configured risk.</p></article>
+          <article class="system-card reveal"><div class="system-icon">◎</div><h4>Document</h4><p>Turn every decision into data to evaluate, learn, and improve with PEDEM.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section copilot">
+      <div class="container copilot-shell reveal">
+        <div>
+          <span class="eyebrow">The Reditum Philosophy</span>
+          <h2>A co-pilot.<br><span>Not an autopilot.</span></h2>
+          <p>REDITUM does not promise to eliminate risk or decide for you. It organizes information so you can make more conscious, measurable decisions aligned with your system.</p>
+        </div>
+        <div class="flow-list">
+          <div class="flow-item"><div class="flow-num">01</div><div><strong>More context</strong><span>Value, trend, and structure in an integrated reading.</span></div></div>
+          <div class="flow-item"><div class="flow-num">02</div><div><strong>Less noise</strong><span>Scenarios filtered by configurable conditions.</span></div></div>
+          <div class="flow-item"><div class="flow-num">03</div><div><strong>More discipline</strong><span>Execution supported by rules, not impulses.</span></div></div>
+          <div class="flow-item"><div class="flow-num">04</div><div><strong>Continuous improvement</strong><span>Documented results to fuel your next PEDEM.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contacto">
+      <div class="container cta-shell reveal">
+        <div>
+          <span class="eyebrow">Your next reading starts here</span>
+          <h2>Don't chase.<br><span>Aim better.</span></h2>
+          <p>Learn how Sniper Ultra, New POC, and Sniper Cluster Vela can integrate into your trading process within the INGRESARIOS ecosystem.</p>
+        </div>
+        <form class="lead-form" id="leadForm" novalidate>
+          <div class="field"><input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required /></div>
+          <div class="field"><input id="email" name="email" type="email" autocomplete="email" placeholder="Your best email" required /></div>
+          <div class="field"><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="WhatsApp (optional)" /></div>
+          <button class="btn-primary" type="submit">I want to see Reditum <span aria-hidden="true">→</span></button>
+          <div class="form-success" id="formSuccess">Demo registered. Connect this form to GHL to trigger the real workflow.</div>
+          <p class="form-note">Landing page prototype. The form is ready to be connected to your GoHighLevel automation.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><strong>REDITUM × INGRESARIOS</strong><br />Prosper by making others prosper.</div>
+      <div class="legal">The presented tools support analysis and execution under user-configured rules. They do not eliminate risk, guarantee results, or constitute financial advice. Past performance does not guarantee future results.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile navigation
+    const menuBtn = document.getElementById('menuBtn');
+    const navShell = document.getElementById('navShell');
+    menuBtn.addEventListener('click', () => {
+      const open = navShell.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => {
+      navShell.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }));
+
+    // Scroll reveals
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Cursor halo
+    const halo = document.getElementById('cursorHalo');
+    if (matchMedia('(pointer:fine)').matches) {
+      document.body.classList.add('cursor-active');
+      window.addEventListener('pointermove', e => {
+        halo.style.left = e.clientX + 'px';
+        halo.style.top = e.clientY + 'px';
+      }, { passive: true });
+      document.querySelectorAll('a,button,input').forEach(el => {
+        el.addEventListener('mouseenter', () => { halo.style.width='44px'; halo.style.height='44px'; });
+        el.addEventListener('mouseleave', () => { halo.style.width='26px'; halo.style.height='26px'; });
+      });
+    }
+
+    // Animated hero market canvas
+    const canvas = document.getElementById('marketCanvas');
+    const ctx = canvas.getContext('2d');
+    let dpr = Math.min(devicePixelRatio || 1, 2);
+    let candles = [];
+    function seedCandles() {
+      candles = [];
+      let price = 270;
+      for (let i=0; i<52; i++) {
+        const open = price;
+        const bias = i > 29 ? .9 : i > 17 ? -.25 : .15;
+        const close = open + (Math.random()-.48+bias*.12)*34;
+        const high = Math.max(open, close) + Math.random()*13;
+        const low = Math.min(open, close) - Math.random()*13;
+        candles.push({open,close,high,low});
+        price = close;
+      }
+    }
+    seedCandles();
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.floor(rect.width*dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height*dpr));
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    addEventListener('resize', resizeCanvas); resizeCanvas();
+    let frame = 0;
+    function drawMarket() {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      ctx.clearRect(0,0,w,h);
+      ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+      for(let x=0;x<w;x+=52){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+      for(let y=0;y<h;y+=44){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+      const zoneY = h*.53 + Math.sin(frame*.012)*7;
+      const grad = ctx.createLinearGradient(0,zoneY-34,0,zoneY+34);
+      grad.addColorStop(0,'rgba(45,231,242,0)');grad.addColorStop(.5,'rgba(45,231,242,.09)');grad.addColorStop(1,'rgba(45,231,242,0)');
+      ctx.fillStyle=grad;ctx.fillRect(0,zoneY-42,w,84);
+      const levels=[-28,-12,8,24];
+      levels.forEach((off,i)=>{ctx.strokeStyle=i===0||i===3?'rgba(45,231,242,.62)':'rgba(168,134,255,.42)';ctx.setLineDash([4,5]);ctx.beginPath();ctx.moveTo(0,zoneY+off);ctx.lineTo(w,zoneY+off);ctx.stroke();});ctx.setLineDash([]);
+      const cw = w/58;
+      candles.forEach((c,i)=>{
+        const x = i*cw+8; const scale=.55;
+        const yOpen=h*.78-c.open*scale; const yClose=h*.78-c.close*scale; const yHigh=h*.78-c.high*scale; const yLow=h*.78-c.low*scale;
+        const up=c.close>=c.open;ctx.strokeStyle=up?'#41f28b':'#ff6474';ctx.fillStyle=ctx.strokeStyle;ctx.globalAlpha=.9;
+        ctx.beginPath();ctx.moveTo(x+cw*.32,yHigh);ctx.lineTo(x+cw*.32,yLow);ctx.stroke();
+        ctx.fillRect(x,Math.min(yOpen,yClose),Math.max(2,cw*.62),Math.max(2,Math.abs(yClose-yOpen)));
+      });ctx.globalAlpha=1;
+      ctx.strokeStyle='rgba(90,124,255,.95)';ctx.lineWidth=2.2;ctx.shadowColor='rgba(45,231,242,.35)';ctx.shadowBlur=12;ctx.beginPath();
+      candles.forEach((c,i)=>{const x=i*cw+cw*.3+8;const y=h*.78-((c.open+c.close)/2)*.55+Math.sin(i*.4)*3;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.shadowBlur=0;
+      frame++; requestAnimationFrame(drawMarket);
+    }
+    drawMarket();
+
+    // Interactive cluster scanner
+    const confidence = document.getElementById('confidence');
+    const clusterSize = document.getElementById('clusterSize');
+    const confidenceOutput = document.getElementById('confidenceOutput');
+    const clusterOutput = document.getElementById('clusterOutput');
+    const activeOutput = document.getElementById('activeOutput');
+    const statusText = document.getElementById('statusText');
+    const syncValue = document.getElementById('syncValue');
+    const zoneValue = document.getElementById('zoneValue');
+    const scanZone = document.getElementById('scanZone');
+    const lines = [...document.querySelectorAll('.poc-line')];
+    const tfButtons = [...document.querySelectorAll('.tf')];
+    const active = [true,true,true,true,true,true];
+    const basePositions = [44,47,52,55,49,58];
+    function updateScanner() {
+      const conf = +confidence.value;
+      const required = +clusterSize.value;
+      const spread = Math.max(1.3, (100-conf)/3.7);
+      let activeCount = active.filter(Boolean).length;
+      confidenceOutput.value = conf + '%';
+      clusterOutput.value = required + ' POC';
+      activeOutput.value = activeCount + '/6';
+      lines.forEach((line,i)=>{
+        const drift = (i-2.5)*spread + Math.sin((conf+i*11)*.17)*1.3;
+        line.style.top = (basePositions[i] + drift) + '%';
+        line.style.opacity = active[i] ? '1' : '.06';
+      });
+      const valid = activeCount >= required && conf >= 68;
+      scanZone.style.height = (72 + spread*10) + 'px';
+      scanZone.style.top = (46 - spread*1.35) + '%';
+      scanZone.style.opacity = valid ? '1' : '.22';
+      statusText.textContent = valid ? 'Cluster validated' : 'No validation';
+      syncValue.textContent = activeCount >= 5 && conf >= 78 ? 'High' : activeCount >= required ? 'Medium' : 'Low';
+      zoneValue.textContent = valid ? 'Active' : 'Waiting';
+    }
+    confidence.addEventListener('input', updateScanner);
+    clusterSize.addEventListener('input', updateScanner);
+    tfButtons.forEach(btn => btn.addEventListener('click', () => {
+      const i=+btn.dataset.index; active[i]=!active[i]; btn.classList.toggle('active',active[i]); updateScanner();
+    }));
+    updateScanner();
+
+    // Prototype form interaction
+    const leadForm = document.getElementById('leadForm');
+    const formSuccess = document.getElementById('formSuccess');
+    leadForm.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!leadForm.checkValidity()) { leadForm.reportValidity(); return; }
+      formSuccess.style.display='block';
+      leadForm.querySelector('button').textContent='Registration complete ✓';
+    });
+  </script>
+</body>
+</html>
