@@ -760,9 +760,16 @@
     .field input:focus { border-color: rgba(var(--cyan-rgb), .55); box-shadow: 0 0 0 4px rgba(var(--cyan-rgb), .06); }
     
     .iti { width: 100%; }
-    .iti__selected-dial-code { color: white; }
+    .iti__selected-dial-code { color: #c1cad4; }
     .iti__country-list { color: #000; } /* Make dropdown text visible */
+    .iti__country-list .iti__dial-code { color: #596677; } /* Make dropdown dial code visible */
     .field .iti input { padding-left: 95px !important; } /* Prevent text overlap with flag and dial code */
+    
+    /* Fix Chrome/Safari autofill background for dark mode */
+    .field input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 50px #080d13 inset !important;
+      -webkit-text-fill-color: white !important;
+    }
     
     .lead-form button { width: 100%; border: 0; min-height: 56px; margin-top: 6px; }
     .form-note { margin: 3px 0 0; color: #596677; font-size: .69rem; line-height: 1.5; text-align: center; }
