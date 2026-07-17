@@ -759,11 +759,11 @@
     }
     .field input:focus { border-color: rgba(var(--cyan-rgb), .55); box-shadow: 0 0 0 4px rgba(var(--cyan-rgb), .06); }
     
-    .iti { width: 100%; display: block; }
-    .iti__flag-container { pointer-events: none; padding-left: 16px; } 
-    .iti__selected-dial-code { color: white; margin-left: 6px; font-size: 1rem; }
+    .iti { width: 100%; }
+    .iti__country-container { pointer-events: none; } /* Prevents modifying country */
+    .iti__selected-dial-code { color: white; }
     .iti__arrow { display: none; } /* Hide arrow */
-    .field .iti input { padding-left: 95px; } /* Prevent text overlap with flag and dial code */
+    .field .iti input { padding-left: 85px !important; } /* Prevent text overlap with flag and dial code */
     
     .lead-form button { width: 100%; border: 0; min-height: 56px; margin-top: 6px; }
     .form-note { margin: 3px 0 0; color: #596677; font-size: .69rem; line-height: 1.5; text-align: center; }
@@ -1261,8 +1261,7 @@
     const phoneInput = document.querySelector("#phone");
     const iti = window.intlTelInput(phoneInput, {
       initialCountry: "auto",
-      allowDropdown: false, // Make flag non-modifiable
-      showSelectedDialCode: true,
+      separateDialCode: true,
       geoIpLookup: function(callback) {
         fetch("https://ipapi.co/json")
           .then(res => res.json())
